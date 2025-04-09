@@ -4,7 +4,7 @@ export const SunIcon = () => (
     className="h-4 w-4 text-yellow-400"
     fill="none"
     viewBox="0 0 24 24"
-    stroke="currentColor"
+    stroke="gray"
   >
     <path
       strokeLinecap="round"
@@ -21,13 +21,30 @@ export const MoonIcon = () => (
     className="h-4 w-4 text-gray-900 dark:text-gray-100"
     fill="none"
     viewBox="0 0 24 24"
-    stroke="currentColor"
+    stroke="gray"
   >
     <path
       strokeLinecap="round"
       strokeLinejoin="round"
       strokeWidth={2}
       d="M21 12.79A9 9 0 1111.21 3a7 7 0 109.79 9.79z"
+    />
+  </svg>
+);
+
+export const HamburgerIcon = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    className="h-4 w-4"
+    fill="none"
+    viewBox="0 0 24 24"
+    stroke="gray"
+    strokeWidth={2}
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      d="M4 6h16M4 12h16M4 18h16"
     />
   </svg>
 );
