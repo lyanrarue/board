@@ -19,7 +19,7 @@ const Nav = () => {
       </button>
       {/* NavPopover */}
       {isOpen && (
-        <div className="absolute top-full mt-2 right-0 w-48 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-md shadow-lg">
+        <div className="absolute top-full mt-2 right-0 w-50 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-md shadow-lg">
           <NavPopover />
         </div>
       )}

@@ -1,6 +1,8 @@
 import "./App.css";
 import DarkModeToggle from "./components/DarkModeToggle/DarkModeToggle";
 import NavPopover from "./components/Nav/Nav";
+import ProtocolDashboard from "./components/ProtocolDashboard/ProtocolDashboard";
+import Timer from "./components/Timer/Timer";
 
 const App = () => {
   return (
@@ -11,7 +13,9 @@ const App = () => {
           <NavPopover />
         </div>
       </div>
-      <div>Coming Soon...</div>
+      <div>
+        <ProtocolDashboard />
+      </div>
     </div>
   );
 };
