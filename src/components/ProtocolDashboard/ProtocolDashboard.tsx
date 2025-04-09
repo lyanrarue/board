@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { defaultProtocol } from "../../data/data";
 
-const GripSetViewer = () => {
+const ProtocolDashboard = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [isRunning, setIsRunning] = useState(false); // New state for start/stop toggle
   const gripSets = defaultProtocol.gripSets;
 
   const handleNext = () => {
@@ -17,22 +18,25 @@ const GripSetViewer = () => {
     }
   };
 
+  const toggleStartStop = () => {
+    setIsRunning(!isRunning); // Toggle the running state
+  };
+
   const currentGripSet = gripSets[currentIndex];
 
   return (
-    <div className="p-10 w-60 rounded-lg shadow-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100">
-      <h2 className="text-l font-bold mb-2">{currentGripSet.name}</h2>
-      <p>Total Reps: {currentGripSet.totalReps}</p>
-      <p>Hang Time Per Rep: {currentGripSet.hangTimePerRepInSeconds} seconds</p>
-      <p>
-        Rest Between Sets: {currentGripSet.restBetweenSetsInSeconds} seconds
-      </p>
+    <div className="flex flex-col justify-between h-full">
+      <div className="flex flex-row justify-center text-xl font-bold">
+        <h2 className="mb-3">{currentGripSet.name}</h2>
+      </div>
 
-      <div className="flex justify-between mt-4">
+      <div className="flex justify-center">Coming soon: Timer</div>
+
+      <div className="flex justify-between items-center mt-5 space-x-2">
         <button
           onClick={handlePrevious}
           disabled={currentIndex === 0}
-          className={`px-4 py-2 rounded-md ${
+          className={`w-24 px-4 py-2 rounded-md ${
             currentIndex === 0
               ? "bg-gray-300 text-gray-500 cursor-not-allowed"
               : "bg-blue-500 text-white hover:bg-blue-600"
@@ -41,9 +45,19 @@ const GripSetViewer = () => {
           Previous
         </button>
         <button
+          onClick={toggleStartStop}
+          className={`w-24 px-4 py-2 rounded-md text-white ${
+            isRunning
+              ? "bg-red-500 hover:bg-red-600"
+              : "bg-green-500 hover:bg-green-600"
+          }`}
+        >
+          {isRunning ? "Stop" : "Start"}
+        </button>
+        <button
           onClick={handleNext}
           disabled={currentIndex === gripSets.length - 1}
-          className={`px-4 py-2 rounded-md ${
+          className={`w-24 px-4 py-2 rounded-md ${
             currentIndex === gripSets.length - 1
               ? "bg-gray-300 text-gray-500 cursor-not-allowed"
               : "bg-blue-500 text-white hover:bg-blue-600"
@@ -56,4 +70,4 @@ const GripSetViewer = () => {
   );
 };
 
-export default GripSetViewer;
+export default ProtocolDashboard;
