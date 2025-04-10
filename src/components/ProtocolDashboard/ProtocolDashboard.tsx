@@ -16,7 +16,7 @@ const ProtocolDashboard = () => {
   const gripSets = defaultProtocol.gripSets;
 
   const toggleStartStop = () => {
-    setIsRunning(!isRunning); // Toggle the running state
+    setIsRunning(!isRunning);
   };
 
   const incrementGripSet = () => {
@@ -34,7 +34,7 @@ const ProtocolDashboard = () => {
   };
 
   const incrementRep = () => {
-    if (repIndex < gripSets[gripSetIndex].totalReps) {
+    if (repIndex < gripSets[gripSetIndex].totalReps - 1) {
       setRepIndex(repIndex + 1);
     } else {
       incrementGripSet();
@@ -113,11 +113,11 @@ const ProtocolDashboard = () => {
           onClick={incrementRep}
           disabled={
             gripSetIndex >= gripSets.length - 1 &&
-            repIndex >= gripSets[gripSetIndex].totalReps
+            repIndex >= gripSets[gripSetIndex].totalReps - 1
           }
           className={`p-2 rounded-md hover:shadow-md hover:bg-gray-100 dark:hover:bg-gray-700 ${
             gripSetIndex >= gripSets.length - 1 &&
-            repIndex >= gripSets[gripSetIndex].totalReps
+            repIndex >= gripSets[gripSetIndex].totalReps - 1
               ? "opacity-50 cursor-not-allowed"
               : ""
           }`}
