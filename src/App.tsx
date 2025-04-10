@@ -1,6 +1,6 @@
 import "./App.css";
 import DarkModeToggle from "./components/DarkModeToggle/DarkModeToggle";
-import SettingsPopover from "./components/Settings/SettingsIconButton";
+import SettingsPopover from "./components/SettingsPopover/SettingsPopover";
 import ProtocolDashboard from "./components/ProtocolDashboard/ProtocolDashboard";
 
 const App = () => {
