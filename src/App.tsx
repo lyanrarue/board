@@ -1,6 +1,6 @@
 import "./App.css";
 import DarkModeToggle from "./components/DarkModeToggle/DarkModeToggle";
-import SettingsIconButton from "./components/Settings/SettingsIconButton";
+import SettingsPopover from "./components/Settings/SettingsIconButton";
 import ProtocolDashboard from "./components/ProtocolDashboard/ProtocolDashboard";
 
 const App = () => {
@@ -9,7 +9,7 @@ const App = () => {
       <div className="absolute top-4 right-4">
         <div className="flex flex-row items-center">
           <DarkModeToggle />
-          <SettingsIconButton />
+          <SettingsPopover />
         </div>
       </div>
       <div>
