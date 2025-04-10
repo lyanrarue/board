@@ -1,4 +1,4 @@
-const NavPopover = () => {
+const SettingsPopover = () => {
   return (
     <div>
       <div className="absolute top-[-6px] right-2 w-3 h-3 bg-white dark:bg-gray-800 transform rotate-45"></div>
@@ -11,4 +11,4 @@ const NavPopover = () => {
   );
 };
 
-export default NavPopover;
+export default SettingsPopover;

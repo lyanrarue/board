@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { HamburgerIcon } from "../Icons/Icons";
-import NavPopover from "./NavPopover/NavPopover";
+import NavPopover from "./SettingsPopover/SettingsPopover";
+import { Settings } from "lucide-react";
 
-const Nav = () => {
+const SettingsIconButton = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleDropdown = () => {
@@ -15,7 +15,7 @@ const Nav = () => {
         onClick={toggleDropdown}
         className="px-1 py-1 rounded-md focus:outline-none hover:bg-gray-100 dark:hover:bg-gray-900"
       >
-        <HamburgerIcon />
+        <Settings />
       </button>
       {/* NavPopover */}
       {isOpen && (
@@ -27,4 +27,4 @@ const Nav = () => {
   );
 };
 
-export default Nav;
+export default SettingsIconButton;

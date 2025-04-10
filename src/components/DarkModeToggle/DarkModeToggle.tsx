@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { MoonIcon, SunIcon } from "../Icons/Icons";
+import { Moon, Sun } from "lucide-react";
 
 const DarkModeToggle = () => {
   const [darkMode, setDarkMode] = useState(false);
@@ -27,7 +27,7 @@ const DarkModeToggle = () => {
       onClick={toggleDarkMode}
       className="rounded-full w-6 h-6 flex items-center justify-center transition duration-400 hover:bg-gray-100 dark:hover:bg-gray-900"
     >
-      {darkMode ? <MoonIcon /> : <SunIcon />}
+      {darkMode ? <Moon /> : <Sun />}
     </button>
   );
 };
