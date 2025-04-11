@@ -16,6 +16,10 @@ const ProtocolDashboard = () => {
   const sequence = generateSegments(defaultProtocol);
   const [currentEventIndex, setCurrentEventIndex] = useState(0);
   const [currentSegmentIndex, setCurrentSegmentIndex] = useState(0);
+  const [remainingTime, setRemainingTime] = useState(
+    sequence[0].events[0].durationInSeconds
+  );
+
   const currentSegment = sequence[currentSegmentIndex];
   const currentEvent = currentSegment.events[currentEventIndex];
 
@@ -32,7 +36,11 @@ const ProtocolDashboard = () => {
     setIsRunning(!isRunning);
   };
 
-  const incrementEventIndex = () => {
+  const incrementEventIndex = (pause?: boolean) => {
+    if (pause) {
+      setIsRunning(false);
+    }
+
     if (isLastEventInSegment()) {
       incremementSegmentIndex();
       setCurrentEventIndex(0);
@@ -42,6 +50,7 @@ const ProtocolDashboard = () => {
   };
 
   const decrementEventIndex = () => {
+    setIsRunning(false);
     if (isFirstEventInSegment()) {
       decrementSegmentIndex();
       setCurrentEventIndex(currentSegment.events.length - 1);
@@ -51,52 +60,48 @@ const ProtocolDashboard = () => {
   };
 
   const incremementSegmentIndex = () => {
+    setIsRunning(false);
     setCurrentSegmentIndex(currentSegmentIndex + 1);
     setCurrentEventIndex(0);
   };
 
   const decrementSegmentIndex = () => {
+    setIsRunning(false);
     setCurrentSegmentIndex(currentSegmentIndex - 1);
     setCurrentEventIndex(0);
   };
 
-  // useEffect(() => {
-  //   let cancelTimer: (() => void) | undefined;
-  //   if (isRunning) {
-  //     cancelTimer = timer(() => {
-  //       setSecondsRemainingInRep((prev) => Math.max(prev - 1, 0));
-  //     }, 1000).cancel;
-  //   }
+  useEffect(() => {
+    let cancelTimer: (() => void) | undefined;
 
-  //   return () => {
-  //     if (cancelTimer) {
-  //       setIsRunning(false);
-  //     }
-  //   };
-  // }, [isRunning]);
+    if (isRunning && remainingTime > 0) {
+      cancelTimer = timer(() => {
+        setRemainingTime((prev) => {
+          if (prev <= 1) {
+            incrementEventIndex();
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000).cancel;
+    }
 
-  // useEffect(() => {
-  //   if (secondsRemainingInRep <= 0) {
-  //     if (repIndex < currentGripSet.totalReps - 1) {
-  //       incrementRep();
-  //       setSecondsRemainingInRep(currentGripSet.hangTimePerRepInSeconds);
-  //     } else if (gripSetIndex < gripSets.length - 1) {
-  //       setGripSetIndex(gripSetIndex + 1);
-  //       setRepIndex(0);
-  //       setSecondsRemainingInRep(
-  //         gripSets[gripSetIndex + 1].restBetweenSetsInSeconds
-  //       );
-  //     } else {
-  //       setIsRunning(false); // Stop the timer when all sets are done
-  //     }
-  //   }
-  // }, [secondsRemainingInRep])
+    return () => {
+      if (cancelTimer) cancelTimer();
+    };
+  }, [isRunning, remainingTime]);
+
+  useEffect(() => {
+    setRemainingTime(currentEvent.durationInSeconds);
+  }, [currentEventIndex]);
+
+  console.log(currentEvent.durationInSeconds);
 
   return (
     <div>
       <div className="flex flex-col justify-between h-full space-y-10">
         <div className="flex flex-row justify-center text-3xl font-bold">
-          <h2 className="mb-3 w-64 h-12 text-center break-words">
+          <h2 className="mb-3 w-50 h-10 text-center break-words">
             {currentSegment.name}
           </h2>
         </div>
@@ -106,7 +111,7 @@ const ProtocolDashboard = () => {
         </div>
 
         <div className="flex justify-center text-2xl">
-          <span>{currentEvent.durationInSeconds}</span>
+          <span>{remainingTime}s</span>
         </div>
 
         <div className="flex flex-row justify-center space-x-10">
