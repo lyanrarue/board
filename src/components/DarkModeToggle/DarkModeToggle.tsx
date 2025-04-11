@@ -25,9 +25,9 @@ const DarkModeToggle = () => {
   return (
     <button
       onClick={toggleDarkMode}
-      className="rounded-full w-6 h-6 flex items-center justify-center transition duration-400 hover:bg-gray-100 dark:hover:bg-gray-900"
+      className="rounded-full w-10 h-10 flex items-center justify-center transition duration-400 hover:bg-gray-100 dark:hover:bg-gray-900"
     >
-      {darkMode ? <Moon /> : <Sun />}
+      {darkMode ? <Moon size={30} /> : <Sun size={30} />}
     </button>
   );
 };
