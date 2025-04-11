@@ -43,7 +43,9 @@ const ProtocolDashboard = () => {
     });
   };
 
-  const incrementEventIndex = () => {
+  const onIncremementIndexButtonClick = () => incrementEventIndex(true);
+
+  const incrementEventIndex = (pause: boolean) => {
     if (isLastEventInSegment()) {
       incremementSegmentIndex();
       setCurrentEventIndex(0);
@@ -58,6 +60,11 @@ const ProtocolDashboard = () => {
           currentSegment.events[currentEventIndex + 1]?.durationInSeconds || 0,
       },
     });
+
+    if (pause) {
+      timer.pause();
+      setIsRunning(false);
+    }
   };
 
   const decrementEventIndex = () => {
@@ -67,6 +74,7 @@ const ProtocolDashboard = () => {
     } else {
       setCurrentEventIndex(currentEventIndex - 1);
     }
+
     timer.stop();
     timer.start({
       countdown: true,
@@ -75,6 +83,8 @@ const ProtocolDashboard = () => {
           currentSegment.events[currentEventIndex - 1]?.durationInSeconds || 0,
       },
     });
+    timer.pause();
+    setIsRunning(false);
   };
 
   const incremementSegmentIndex = () => {
@@ -88,12 +98,14 @@ const ProtocolDashboard = () => {
           sequence[currentSegmentIndex + 1]?.events[0]?.durationInSeconds || 0,
       },
     });
+    timer.pause();
+    setIsRunning(false);
   };
 
   const decrementSegmentIndex = () => {
     setCurrentSegmentIndex(currentSegmentIndex - 1);
     setCurrentEventIndex(0);
-    timer.pause();
+    timer.stop();
     timer.start({
       countdown: true,
       startValues: {
@@ -101,6 +113,8 @@ const ProtocolDashboard = () => {
           sequence[currentSegmentIndex - 1]?.events[0]?.durationInSeconds || 0,
       },
     });
+    timer.pause();
+    setIsRunning(false);
   };
 
   const [timer, isTargetAchieved] = useTimer({
@@ -112,7 +126,7 @@ const ProtocolDashboard = () => {
 
   useEffect(() => {
     if (isTargetAchieved) {
-      incrementEventIndex();
+      incrementEventIndex(false);
     }
   }, [isTargetAchieved]);
 
@@ -177,7 +191,7 @@ const ProtocolDashboard = () => {
           {isRunning ? <Pause /> : <Play />}
         </button>
         <button
-          onClick={incrementEventIndex}
+          onClick={onIncremementIndexButtonClick}
           disabled={isLastEventInSequence()}
           className={`p-2 rounded-md hover:shadow-md hover:bg-gray-100 dark:hover:bg-gray-700 ${
             isLastEventInSequence() ? "opacity-50 cursor-not-allowed" : ""
