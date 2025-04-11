@@ -8,17 +8,14 @@ import {
   Play,
   Pause,
 } from "lucide-react";
-import { timer } from "../../utils/timer";
 import { generateSegments } from "../../utils/sequencer";
+import useTimer from "easytimer-react-hook";
 
 const ProtocolDashboard = () => {
   const [isRunning, setIsRunning] = useState(false);
   const sequence = generateSegments(defaultProtocol);
   const [currentEventIndex, setCurrentEventIndex] = useState(0);
   const [currentSegmentIndex, setCurrentSegmentIndex] = useState(0);
-  const [remainingTime, setRemainingTime] = useState(
-    sequence[0].events[0].durationInSeconds
-  );
 
   const currentSegment = sequence[currentSegmentIndex];
   const currentEvent = currentSegment.events[currentEventIndex];
@@ -33,69 +30,91 @@ const ProtocolDashboard = () => {
     isFirstEventInSegment() && isFirstSegment();
 
   const toggleStartStop = () => {
-    setIsRunning(!isRunning);
+    setIsRunning((prev) => {
+      if (!prev) {
+        timer.start({
+          countdown: true,
+          startValues: { seconds: currentEvent.durationInSeconds },
+        });
+      } else {
+        timer.pause();
+      }
+      return !prev;
+    });
   };
 
-  const incrementEventIndex = (pause?: boolean) => {
-    if (pause) {
-      setIsRunning(false);
-    }
-
+  const incrementEventIndex = () => {
     if (isLastEventInSegment()) {
       incremementSegmentIndex();
       setCurrentEventIndex(0);
     } else {
       setCurrentEventIndex(currentEventIndex + 1);
     }
+    timer.stop();
+    timer.start({
+      countdown: true,
+      startValues: {
+        seconds:
+          currentSegment.events[currentEventIndex + 1]?.durationInSeconds || 0,
+      },
+    });
   };
 
   const decrementEventIndex = () => {
-    setIsRunning(false);
     if (isFirstEventInSegment()) {
       decrementSegmentIndex();
       setCurrentEventIndex(currentSegment.events.length - 1);
     } else {
       setCurrentEventIndex(currentEventIndex - 1);
     }
+    timer.stop();
+    timer.start({
+      countdown: true,
+      startValues: {
+        seconds:
+          currentSegment.events[currentEventIndex - 1]?.durationInSeconds || 0,
+      },
+    });
   };
 
   const incremementSegmentIndex = () => {
-    setIsRunning(false);
     setCurrentSegmentIndex(currentSegmentIndex + 1);
     setCurrentEventIndex(0);
+    timer.stop();
+    timer.start({
+      countdown: true,
+      startValues: {
+        seconds:
+          sequence[currentSegmentIndex + 1]?.events[0]?.durationInSeconds || 0,
+      },
+    });
   };
 
   const decrementSegmentIndex = () => {
-    setIsRunning(false);
     setCurrentSegmentIndex(currentSegmentIndex - 1);
     setCurrentEventIndex(0);
+    timer.pause();
+    timer.start({
+      countdown: true,
+      startValues: {
+        seconds:
+          sequence[currentSegmentIndex - 1]?.events[0]?.durationInSeconds || 0,
+      },
+    });
   };
 
-  useEffect(() => {
-    let cancelTimer: (() => void) | undefined;
+  const [timer, isTargetAchieved] = useTimer({
+    precision: "secondTenths",
+    countdown: true,
+    startValues: { seconds: currentEvent.durationInSeconds },
+    updateWhenTargetAchieved: true,
+  });
 
-    if (isRunning && remainingTime > 0) {
-      cancelTimer = timer(() => {
-        setRemainingTime((prev) => {
-          if (prev <= 1) {
-            incrementEventIndex();
-            return 0;
-          }
-          return prev - 1;
-        });
-      }, 1000).cancel;
+  useEffect(() => {
+    if (isTargetAchieved) {
+      incrementEventIndex();
     }
-
-    return () => {
-      if (cancelTimer) cancelTimer();
-    };
-  }, [isRunning, remainingTime]);
-
-  useEffect(() => {
-    setRemainingTime(currentEvent.durationInSeconds);
-  }, [currentEventIndex]);
-
-  console.log(currentEvent.durationInSeconds);
+  }, [isTargetAchieved]);
 
   return (
     <div>
@@ -111,7 +130,11 @@ const ProtocolDashboard = () => {
         </div>
 
         <div className="flex justify-center text-2xl">
-          <span>{remainingTime}s</span>
+          <span>
+            {timer
+              .getTimeValues()
+              .toString(["minutes", "seconds", "secondTenths"])}
+          </span>
         </div>
 
         <div className="flex flex-row justify-center space-x-10">

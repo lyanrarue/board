@@ -20,7 +20,7 @@ export const generateSegments = (protocol: Protocol): Segment[] => {
     const eventsInSegment: Event[] = [];
     eventsInSegment.push({
       type: "Get Ready",
-      durationInSeconds: 5,
+      durationInSeconds: 10,
       currentRep: 1,
     });
 
