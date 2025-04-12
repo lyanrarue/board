@@ -46,18 +46,21 @@ const ProtocolDashboard = () => {
   const onIncremementIndexButtonClick = () => incrementEventIndex(true);
 
   const incrementEventIndex = (pause: boolean) => {
+    let eventIndexToUse;
     if (isLastEventInSegment()) {
+      eventIndexToUse = 0;
       incremementSegmentIndex();
       setCurrentEventIndex(0);
     } else {
-      setCurrentEventIndex(currentEventIndex + 1);
+      eventIndexToUse = currentEventIndex + 1;
+      setCurrentEventIndex(eventIndexToUse);
     }
+
     timer.stop();
     timer.start({
       countdown: true,
       startValues: {
-        seconds:
-          currentSegment.events[currentEventIndex + 1]?.durationInSeconds || 0,
+        seconds: currentSegment.events[eventIndexToUse]?.durationInSeconds || 0,
       },
     });
 
