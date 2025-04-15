@@ -131,7 +131,11 @@ const ProtocolDashboard = () => {
 
   useEffect(() => {
     if (isTargetAchieved && !isLastEventInSequence()) {
-      incrementEventIndex(false);
+      if (isLastEventInSegment()) {
+        incremementSegmentIndex();
+      } else {
+        incrementEventIndex(false);
+      }
     }
   }, [isTargetAchieved]);
 
